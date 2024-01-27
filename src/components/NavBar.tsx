@@ -1,7 +1,7 @@
 import { Disclosure } from "@headlessui/react";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import { ShoppingCartIcon } from "@heroicons/react/24/outline";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 const navigation = [
   { name: "Home", to: "/", current: true },
@@ -13,7 +13,14 @@ function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(" ");
 }
 
+
 export default function Navbar() {
+  const location = useLocation()
+
+  const updatedNav = navigation.map((item) => ({
+    ...item, current: item.to === location.pathname
+  }))
+  
   return (
     <Disclosure as="nav" className="bg-gray-800">
       {({ open }) => (
@@ -35,7 +42,7 @@ export default function Navbar() {
               <div className="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
                 <div className="hidden sm:ml-6 sm:block">
                   <div className="flex space-x-4">
-                    {navigation.map((item) => (
+                    {updatedNav.map((item) => (
                       <Link
                         key={item.name}
                         to={item.to}
