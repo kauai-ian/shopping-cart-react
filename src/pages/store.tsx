@@ -1,5 +1,6 @@
 import Navbar from "../components/NavBar";
 import { useEffect, useState } from "react";
+import { useShoppingCart, ShoppingCartProps } from "../components/ShoppingCart";
 
 type ItemProps = {
   id: number;
@@ -7,6 +8,7 @@ type ItemProps = {
   price: string;
   image: string;
   quantity: number;
+  items: []
 };
 
 const loadingArray = Array.from({ length: 12 }, (_, index) => index);
@@ -24,6 +26,7 @@ export function Store() {
   const [items, setItems] = useState<ItemProps[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [quantities, setQuantities] = useState<{ [key: number]: number }>({});
+  const { cartItems, addItem, removeItem} = useShoppingCart()
 
   useEffect(() => {
     const dataFetch = async () => {
@@ -66,7 +69,7 @@ export function Store() {
   return (
     <>
       <Navbar />
-      <h1>Store </h1>
+      {/* <h1>Store </h1> */}
       <div className=" gap-4 p-2 grid md:grid-cols-4 sm:grid-cols-1">
         {isLoading
           ? loadingArray.map((index) => <Loading key={index} />)
@@ -112,11 +115,11 @@ export function Store() {
       <div>
         <h2>Shopping Cart</h2>
         <ul>
-          {items
-            .filter((item) => item.quantity)
-            .map((item) => (
-              <li key={item.id}>
-                Item {item.title}, Quantity {item.quantity}
+          {Object.entries(cartItems)
+            .filter(([itemId, quantity]) => quantity > 0)
+            .map(([itemId, quantity]) => (
+              <li key={itemId}>
+                Item {itemId}, Quantity {quantity}
               </li>
             ))}
         </ul>

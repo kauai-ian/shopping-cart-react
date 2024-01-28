@@ -1,0 +1,1 @@
+//items inside the shopping cart rendering the image, the name, quantity and price. 
