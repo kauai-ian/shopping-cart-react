@@ -13,14 +13,14 @@ function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(" ");
 }
 
-
 export default function Navbar() {
-  const location = useLocation()
+  const location = useLocation();
 
   const updatedNav = navigation.map((item) => ({
-    ...item, current: item.to === location.pathname
-  }))
-  
+    ...item,
+    current: item.to === location.pathname,
+  }));
+
   return (
     <Disclosure as="nav" className="bg-gray-800">
       {({ open }) => (
@@ -61,7 +61,9 @@ export default function Navbar() {
                 </div>
               </div>
               <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
-                <ShoppingCartIcon className="h-8 w-8 rounded-full stroke-white" />
+                <Link to="/cart">
+                  <ShoppingCartIcon className="h-8 w-8 rounded-full stroke-white" />
+                </Link>
               </div>
             </div>
           </div>

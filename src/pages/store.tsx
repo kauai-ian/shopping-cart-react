@@ -1,14 +1,15 @@
 import Navbar from "../components/NavBar";
 import { useEffect, useState } from "react";
-import { useShoppingCart, ShoppingCartProps } from "../components/ShoppingCart";
+import {getData} from "../helpers/api"
+import { useShoppingCart } from "../context/ShoppingCartContext";
 
-type ItemProps = {
+export type ItemProps = {
   id: number;
   title: string;
   price: string;
   image: string;
   quantity: number;
-  items: []
+  
 };
 
 const loadingArray = Array.from({ length: 12 }, (_, index) => index);
@@ -26,50 +27,56 @@ export function Store() {
   const [items, setItems] = useState<ItemProps[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [quantities, setQuantities] = useState<{ [key: number]: number }>({});
-  const { cartItems, addItem, removeItem} = useShoppingCart()
+
+ const { addItem } = useShoppingCart();
 
   useEffect(() => {
     const dataFetch = async () => {
-      try {
-        const itemsData = await (
-          await fetch("https://fakestoreapi.com/products", { mode: "cors" })
-        ).json();
-        setItems(itemsData);
-      } catch (error) {
-        console.error(error);
-      } finally {
-        //2 second delay
-        setTimeout(() => {
-          setIsLoading(false);
-        }, 2000);
-      }
-    };
+    try {
+      const itemsData = await getData()
+      setItems(itemsData);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      //2 second delay
+      setTimeout(() => {
+        setIsLoading(false);
+      }, 2000);
+    }
+  };
+  
     dataFetch();
   }, []);
 
-  const handleQuantityChange = (itemId: number, quantity: number) => {
+
+  // const getItems = (id: number): ItemProps => {
+  //   return items.find((item) => item.id === id) || {id: 0, title: "", price: "", image: "", quantity: 0 }
+  // }
+
+  const handleQuantityChange = (id: number, quantity: number) => {
     setQuantities((prevQuantities) => ({
       ...prevQuantities,
-      [itemId]: quantity,
+      [id]: quantity,
     }));
   };
 
-  const handleAddToCart = (itemId: number) => {
-    const quantity = quantities[itemId] || 1;
-    setItems((prevItems) => {
-      const updatedItems = prevItems.map((item) =>
-        item.id === itemId
-          ? { ...item, quantity: (item.quantity || 0) + quantity }
-          : item
-      );
-      return updatedItems;
-    });
+  const handleAddToCart = (id: number) => {
+    // const quantity = quantities[id] || 1;
+    // setItems((prevItems) => {
+    //   const updatedItems = prevItems.map((item) =>
+    //     item.id === id
+    //       ? { ...item, quantity: (item.quantity || 0) + quantity }
+    //       : item
+    //   );
+      console.log( "clicked add")
+      // return updatedItems;
+    addItem(id);
   };
 
   return (
     <>
       <Navbar />
-      {/* <h1>Store </h1> */}
+      <h1 className="text-center">Store </h1>
       <div className=" gap-4 p-2 grid md:grid-cols-4 sm:grid-cols-1">
         {isLoading
           ? loadingArray.map((index) => <Loading key={index} />)
@@ -102,27 +109,15 @@ export function Store() {
                       </option>
                     ))}
                   </select>
-                  <div
+                  <button
                     className="bg-yellow-200 p-2 rounded-lg"
                     onClick={() => handleAddToCart(item.id)}
                   >
                     Add to Cart
-                  </div>
+                  </button>
                 </div>
               </div>
             ))}
-      </div>
-      <div>
-        <h2>Shopping Cart</h2>
-        <ul>
-          {Object.entries(cartItems)
-            .filter(([itemId, quantity]) => quantity > 0)
-            .map(([itemId, quantity]) => (
-              <li key={itemId}>
-                Item {itemId}, Quantity {quantity}
-              </li>
-            ))}
-        </ul>
       </div>
     </>
   );

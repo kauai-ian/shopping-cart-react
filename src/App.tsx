@@ -1,25 +1,14 @@
 import Navbar from "./components/NavBar";
-import { ShoppingCartProvider } from "./components/ShoppingCart";
+// import { ShoppingCartProvider } from "./context/ShoppingCartContext";
 import { Home } from "./pages/home";
 
 function App() {
   return (
     <>
-      <ShoppingCartProvider
-        addItem={function (): void {
-          throw new Error("Function not implemented.");
-        }}
-        removeItem={function (): void {
-          throw new Error("Function not implemented.");
-        }}
-        quantity={0}
-        id={""}
-        cartQuantity={0}
-        cartItems={[]}
-      >
+      {/* <ShoppingCartProvider> */}
         <Navbar></Navbar>
         <Home />
-      </ShoppingCartProvider>
+      {/* </ShoppingCartProvider> */}
     </>
   );
 }
