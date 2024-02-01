@@ -1,28 +1,23 @@
-import { useShoppingCart } from "../context/ShoppingCartContext";
-import { ItemProps } from "../pages/store";
+import { useShoppingCart } from "../hooks/useShoppingCart";
+import { CartItem } from "../context/ShoppingCartContext";
 
-type CartItemProps = {
-  id: number;
-  quantity: number;
-};
-
-export function CartItem({ id, quantity }: CartItemProps) {
+function Item({ id, quantity }: CartItem) {
   const { removeItem, cartItems } = useShoppingCart();
 
   const item = cartItems.find((item) => item.id === id);
-  if (!item)  return null; 
+  if (!item) return null;
 
   return (
-    <div className="">
-      <img src={item.image} alt={item.title} className="w-16 h-auto" />
-      <div>
-        <p className="font-semibold">{item.title}</p>
-        <p>${item.price}</p>
+    <div className="flex items-center justify-between border-2 border-gray-300 p-4">
+      <div className="flex items-center space-x-4">
+        <img src={item.image} alt={item.title} className="w-16 h-auto" />
+        <div className=" ">
+          <p className="font-semibold">{item.title}</p>
+          <p>${item.price}</p>
+        </div>
       </div>
-      <div>
-        {quantity > 1 && (
-          <span className="text-grey-400">x{quantity}</span>
-        )}
+      <div className="flex items-center">
+        {quantity > 1 && <span className="text-grey-400">x{quantity}</span>}
 
         <button
           onClick={() => removeItem(id)}
@@ -34,3 +29,4 @@ export function CartItem({ id, quantity }: CartItemProps) {
     </div>
   );
 }
+export default Item;

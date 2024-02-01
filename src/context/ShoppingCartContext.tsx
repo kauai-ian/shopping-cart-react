@@ -1,30 +1,27 @@
-import { ReactNode, createContext, useContext, useState } from "react";
-import { ItemProps } from "../pages/store";
+import { ReactNode, createContext, useState } from "react";
 
 export type ShoppingCartProps = {
-  addItem: (id: number) => void;
+  addItem: (item: ItemType) => void;
   removeItem: (id: number) => void;
   getItemQuantity: (id: number) => number;
   cartQuantity: number;
   cartItems: CartItem[];
 };
 
-type CartItem =  ItemProps & {
+export type CartItem = ItemType & {
   id: number;
   quantity: number;
 };
 
-const ShoppingCartContext = createContext({} as ShoppingCartProps);
+export type ItemType = {
+  id: number;
+  title: string;
+  price: string;
+  image: string;
+  quantity: number;
+};
 
-export function useShoppingCart() {
-  const context = useContext(ShoppingCartContext);
-  if (!context) {
-    throw new Error(
-      "useShoppingCart must be used within a shoppingCartProvider"
-    );
-  }
-  return context;
-}
+export const ShoppingCartContext = createContext({} as ShoppingCartProps);
 
 export function ShoppingCartProvider({ children }: { children: ReactNode }) {
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
@@ -39,18 +36,33 @@ export function ShoppingCartProvider({ children }: { children: ReactNode }) {
     return item ? item.quantity : 0;
   };
 
-  const addItem = (id: number) => {
-    const selectedItem = items.find((item) => item.id === id)
+  const addItem = (_item: ItemType) => {
+    const selectedItem = cartItems.find((item) => item.id === _item.id);
     if (selectedItem) {
-    setCartItems((prev) => [...prev,{...selectedItem, quantity: 1}])
-    }console.log("adding items context", cartItems);
+      return setCartItems((prev) => {
+        return prev.map((item) => {
+          if (item.id === _item.id) {
+            return { ...item, quantity: _item.quantity + _item.quantity };
+          }
+          return item;
+        });
+      });
+    }
+    setCartItems((prev) => [...prev, { ..._item, quantity: _item.quantity }]);
+    console.log("adding items context", cartItems);
   };
 
   const removeItem = (id: number) => {
     setCartItems((prev) => prev.filter((item) => item.id !== id));
   };
 
-  console.log("Context initialized", { addItem, removeItem, getItemQuantity, cartQuantity, cartItems });
+  console.log("Context initialized", {
+    addItem,
+    removeItem,
+    getItemQuantity,
+    cartQuantity,
+    cartItems,
+  });
 
   return (
     <ShoppingCartContext.Provider
