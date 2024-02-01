@@ -13,7 +13,7 @@ function Item({ id, quantity }: CartItem) {
         <img src={item.image} alt={item.title} className="w-16 h-auto" />
         <div className=" ">
           <p className="font-semibold">{item.title}</p>
-          <p>${item.price}</p>
+          <p>${parseFloat(item.price).toFixed(2)}</p>
         </div>
       </div>
       <div className="flex items-center">

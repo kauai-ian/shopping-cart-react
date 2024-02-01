@@ -4,6 +4,10 @@ import CartItem from "../components/CartItem";
 
 export function Cart() {
   const { cartItems } = useShoppingCart();
+
+  const totalPrice = cartItems.reduce((acc, {quantity, price}) => {
+    return acc + quantity * parseFloat(price)
+  }, 0)
   return (
     <>
       <Navbar />
@@ -24,6 +28,9 @@ export function Cart() {
                 </li>
               ))}
           </ul>
+        </div>
+        <div className="mt-4 text-xl font-semibold">
+          Total Price: ${totalPrice.toFixed(2)}
         </div>
       </div>
     </>

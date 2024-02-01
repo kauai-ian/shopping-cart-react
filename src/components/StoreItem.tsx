@@ -40,7 +40,7 @@ const StoreItem: FC<StoreItemProps> = ({
           ))}
         </select>
         <button
-          className="bg-yellow-200 p-2 rounded-lg"
+          className="bg-yellow-200 p-2 rounded-lg active:bg-blue-500"
           onClick={() => handleAddToCart(id)}
         >
           Add to Cart

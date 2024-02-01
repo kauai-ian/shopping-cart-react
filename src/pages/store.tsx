@@ -56,7 +56,7 @@ export function Store() {
   return (
     <>
       <Navbar />
-      <h1 className="text-center">Store </h1>
+      <h1 className="text-center text-4xl mt-4">Store </h1>
       <div className=" gap-4 p-2 grid md:grid-cols-4 sm:grid-cols-1">
         {isLoading
           ? loadingArray.map((index) => <Loading key={index} />)
